@@ -39,7 +39,7 @@ namespace Gerencial.WebApi.Data
 		{
 			IQueryable<Cliente> Query = _context.Tbl_Clientes;
             
-            Query = Query.OrderBy(c => c.Nome);
+            Query = Query.Include(c => c.Intervencoes).AsNoTracking().OrderBy(c => c.Nome);
             return Query;
 		}
         
@@ -47,7 +47,8 @@ namespace Gerencial.WebApi.Data
 		{
 			IQueryable<Cliente> Query = _context.Tbl_Clientes;
             Cliente cliente = Query.Include(c => c.Intervencoes)
-                                   .FirstOrDefault(c => c.Id == Id);
+                                   .AsNoTracking()
+								   .FirstOrDefault(c => c.Id == Id);
             
             return cliente;
 		}
@@ -56,7 +57,7 @@ namespace Gerencial.WebApi.Data
 		{
 			IQueryable<Intervencao> Query = _context.Tbl_Intervencoes;
             
-            Query = Query.OrderBy(Int => Int.Id);
+            Query = Query.AsNoTracking().OrderBy(Int => Int.Id);
             return Query;
 		}
 
@@ -64,13 +65,13 @@ namespace Gerencial.WebApi.Data
 		{
 			IQueryable<Intervencao> Query = _context.Tbl_Intervencoes;
             
-            return Query.FirstOrDefault(c => c.Id == Id);
+            return Query.AsNoTracking().FirstOrDefault(c => c.Id == Id);
 		}
 
 		public IEnumerable<Intervencao> GetIntervencoesByClienteId(int ClienteId)
 		{
 			IQueryable<Intervencao> Query = _context.Tbl_Intervencoes;
-            return Query.Where(inter => inter.ClienteId == ClienteId);
+            return Query.AsNoTracking().Where(inter => inter.ClienteId == ClienteId);
 		}
 	}
 }
